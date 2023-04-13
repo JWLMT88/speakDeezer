@@ -31,7 +31,17 @@ Run the deezer_player.py script:
 python deezer.py
 ```
 Follow the on-screen instructions to search for and play songs.
-
+## Future Ideas
+- Implement a user authentication system so users can create and save their own playlists.
+- Add support for video playback, allowing users to watch music videos in addition to playing songs.
+- Integrate with other music streaming services such as Spotify or Apple Music, giving users more options for finding and playing music.
+- Create a recommendation system that suggests songs based on a user's listening history or preferences.
+- Implement a voice command feature that allows users to control the player with their voice.
+- Add a social feature that allows users to share their playlists and discover new music based on what their friends are listening to.
+- Develop a mobile app version of the player, allowing users to access their music on-the-go.
+- Implement a lyrics feature that displays the lyrics of the currently playing song.
+- Create a smart playlist feature that automatically generates playlists based on different criteria, such as genre or mood.
+- Add support for live streaming concerts and events, allowing users to watch performances in real-time.
 ## Contributing
 We welcome contributions from anyone! If you'd like to contribute, please fork the repository and create a pull request.
 
