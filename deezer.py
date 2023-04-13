@@ -5,6 +5,7 @@ import os
 import re
 from bs4 import BeautifulSoup
 import time
+import auth
 
 def search_song(query):
     url = f"https://api.deezer.com/search?q={query}"
@@ -288,6 +289,20 @@ def boot_up_animation():
     input("Press Enter to continue...")
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def create_playlist(username, playlist_name):
+    """Creates a new playlist for the user with the given username."""
+    # Save the playlist to a file or database associated with the username
+    pass
+
+def save_playlist(username, playlist_name):
+    """Saves an existing playlist for the user with the given username."""
+    # Save the playlist to a file or database associated with the username
+    pass
+
+def load_playlist(username, playlist_name):
+    """Loads a playlist for the user with the given username."""
+    # Load the playlist from a file or database associated with the username
+    pass
 
 
 def check_api_availability(base_url=API_BASE_URL):
@@ -299,8 +314,32 @@ def check_api_availability(base_url=API_BASE_URL):
     except requests.exceptions.RequestException:
         print("Deezer API is not available.")
         return False
+    
+def login():
+    # Prompt user to register or log in
+    while True:
+        choice = input("Enter 'r' to register, 'l' to log in: ")
+        if choice == 'r':
+            # Register new user
+            username = input("Enter desired username: ")
+            password = input("Enter desired password: ")
+            auth.register(username, password)
+            print("User registered successfully.")
+        elif choice == 'l':
+            # Log in existing user
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            if auth.authenticate(username, password):
+                print("Authentication successful.")
+                break
+            else:
+                print("Invalid username or password.")
+        else:
+            print("Invalid choice.")
+
 
 if __name__ == "__main__":
     os.system('cls' if os.name == 'nt' else 'clear')
     boot_up_animation()
+    login()
     main()
