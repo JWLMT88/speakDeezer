@@ -8,13 +8,23 @@ import time
 import auth
 import appdirs
 import datetime
+import gui
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
+import sys
+import argparse
+import subprocess
+from pathlib import Path
 
 # Variables
 APP_NAME = 'speakDeezer'
-HISTORY_FILE = os.path.join(appdirs.user_data_dir(APP_NAME),'history.txt')
+appdata_dir = Path.home() / 'AppData' / 'Local' / 'speakDeezer'
+HISTORY_FILE = appdata_dir/'history.txt'
 USER_FILE = os.path.join(appdirs.user_data_dir(APP_NAME), 'users.txt')
 API_BASE_URL = "https://api.deezer.com/"
 USERNAME = auth.get_current_user()
+
 
 def log_history(input_str):
     # get current timestamp
@@ -254,8 +264,12 @@ def exit_program():
     pygame.mixer.music.stop()
     pygame.quit()
     quit()
+    
+
 
 def main(user):
+    
+        
     pygame.init()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -267,7 +281,7 @@ def main(user):
         print("5. Play songs by genre")
         
         print("6. Exit program")
-        print("\n7. Logout")
+        print(f"\nLogout({user})")
         try:
             user_choice = int(input("Enter the number of your choice: "))
             if user_choice == 1:
@@ -298,6 +312,8 @@ def main(user):
                 break
             elif user_choice == 7:
                 log_history(f"{user_choice}")
+                python = sys.executable
+                os.execl(python, python, *sys.argv)
                 auth.logout()
             elif user_choice == 69:
                 history_folder = os.path.dirname(HISTORY_FILE)
@@ -397,11 +413,16 @@ def login():
             else:
                 USERNAME = current_user
                 return current_user
-                break
-
-
-
-if __name__ == "__main__":
-    os.system('cls' if os.name == 'nt' else 'clear')
-    boot_up_animation()
-    main(login())
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='speakDeezer')
+    parser.add_argument('query', nargs='?', help='search query or track id')
+    parser.add_argument('--gui', action='store_true', help='start with GUI')
+    args = parser.parse_args()
+    if(args.gui):
+        app = QApplication([])
+        window = gui.App()
+        app.exec_()
+    else:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        boot_up_animation()
+        main(login())

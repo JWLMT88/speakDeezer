@@ -1,16 +1,19 @@
 import hashlib
 import os
 import appdirs
+from pathlib import Path
 
-# define file paths
+appdata_dir = Path.home() / 'AppData' / 'Local' / 'speakDeezer'
+
 APP_NAME = 'speakDeezer'
-USER_FILE = os.path.join(appdirs.user_data_dir(APP_NAME), 'users.txt')
-CURRENT_USER_FILE = os.path.join(appdirs.user_data_dir(APP_NAME), 'current_user.txt')
+USER_FILE = appdata_dir / 'users.txt' #os.path.join(appdirs.user_data_dir(APP_NAME), 'users.txt')
+CURRENT_USER_FILE = appdata_dir / 'current_user.txt' #os.path.join(appdirs.user_data_dir(APP_NAME), 'current_user.txt')
 
 def register(username, password):
     # hash password
     hashed_password = hash_password(password)
-    
+    # Create the directory if it doesn't exist
+    appdata_dir.mkdir(parents=True, exist_ok=True)
     # check if user file exists
     if not os.path.exists(USER_FILE):
         # create user file if it doesn't exist
@@ -26,8 +29,6 @@ def register(username, password):
     # add user to file
     with open(USER_FILE, 'a') as f:
         f.write(f'{username}:{hashed_password}\n')
-    print(USER_FILE)
-    input()
     # log in user
     login(username, password)
     return True
