@@ -228,11 +228,11 @@ def exit_program():
     pygame.quit()
     quit()
 
-def main():
+def main(user):
     pygame.init()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
-        print("\nWhat would you like to do?\n")
+        print(f"Welcome {user}, what would you like to do?\n")
         print("1. Search for a song and play it")
         print("2. Show song lyrics")
         print("3. Show song recommendations")
@@ -315,31 +315,46 @@ def check_api_availability(base_url=API_BASE_URL):
         print("Deezer API is not available.")
         return False
     
+USERNAME = ""
+
 def login():
-    # Prompt user to register or log in
-    while True:
-        choice = input("Enter 'r' to register, 'l' to log in: ")
-        if choice == 'r':
-            # Register new user
-            username = input("Enter desired username: ")
-            password = input("Enter desired password: ")
-            auth.register(username, password)
-            print("User registered successfully.")
-        elif choice == 'l':
-            # Log in existing user
-            username = input("Enter username: ")
-            password = input("Enter password: ")
-            if auth.authenticate(username, password):
-                print("Authentication successful.")
-                break
+
+        while True:
+             # check if user is logged in
+            current_user = auth.get_current_user()
+            if not current_user:
+                # prompt user to log in or register
+                while True:
+                    choice = input('Please log in (1) or register (2): ')
+                    if choice == '1':
+                        # prompt user to enter username and password
+                        username = input('Username: ')
+                        password = input('Password: ')
+                        # log in user
+                        if auth.login(username, password):
+                            USERNAME = current_user
+                            return username
+                            break
+                    elif choice == '2':
+                        # prompt user to enter desired username and password
+                        username = input('Desired username: ')
+                        password = input('Desired password: ')
+                        # register user
+                        if auth.register(username, password):
+                            USERNAME = current_user
+                            return username
+                            break
+                    else:
+                        print('Invalid choice')
+                        
             else:
-                print("Invalid username or password.")
-        else:
-            print("Invalid choice.")
+                USERNAME = current_user
+                return current_user
+                break
+
 
 
 if __name__ == "__main__":
     os.system('cls' if os.name == 'nt' else 'clear')
     boot_up_animation()
-    login()
-    main()
+    main(login())
