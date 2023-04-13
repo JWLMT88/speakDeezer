@@ -1,0 +1,4 @@
+pygame
+unidecode
+beautifulsoup4
+requests
