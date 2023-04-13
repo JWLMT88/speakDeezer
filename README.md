@@ -28,7 +28,7 @@ pip install -r requirements.txt
 Run the deezer_player.py script:
 
 ```Bash
-python deezer_player.py
+python deezer.py
 ```
 Follow the on-screen instructions to search for and play songs.
 
