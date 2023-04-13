@@ -17,7 +17,7 @@ To run this project, you'll need to have the following installed on your machine
 Clone the repository to your local machine:
 
 ```Bash
-git clone https://github.com/yourusername/deezer-player.git
+git clone https://github.com/JWLMT88/speakDeezer.git
 ```
 Install the required dependencies:
 
