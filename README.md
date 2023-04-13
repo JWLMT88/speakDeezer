@@ -32,7 +32,7 @@ python deezer.py
 ```
 Follow the on-screen instructions to search for and play songs.
 ## Future Ideas
-- Implement a user authentication system so users can create and save their own playlists.
+- __Implement a user authentication system so users can create and save their own playlists.__(Done)
 - Add support for video playback, allowing users to watch music videos in addition to playing songs.
 - Integrate with other music streaming services such as Spotify or Apple Music, giving users more options for finding and playing music.
 - Create a recommendation system that suggests songs based on a user's listening history or preferences.
