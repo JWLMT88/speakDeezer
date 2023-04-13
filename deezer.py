@@ -14,7 +14,7 @@ APP_NAME = 'speakDeezer'
 HISTORY_FILE = os.path.join(appdirs.user_data_dir(APP_NAME),'history.txt')
 USER_FILE = os.path.join(appdirs.user_data_dir(APP_NAME), 'users.txt')
 API_BASE_URL = "https://api.deezer.com/"
-USERNAME = ""
+USERNAME = auth.get_current_user()
 
 def log_history(input_str):
     # get current timestamp

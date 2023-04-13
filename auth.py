@@ -26,7 +26,8 @@ def register(username, password):
     # add user to file
     with open(USER_FILE, 'a') as f:
         f.write(f'{username}:{hashed_password}\n')
-    
+    print(USER_FILE)
+    input()
     # log in user
     login(username, password)
     return True
@@ -35,8 +36,6 @@ def login(username, password):
     # check if user file exists
     if not os.path.exists(USER_FILE):
         print('No users registered yet')
-        with open(USER_FILE, 'w') as f:
-                f.write('username,password\n')
         return False
     
     # check if username and password match
@@ -73,15 +72,18 @@ def get_current_user():
         return None
 
 def hash_password(password):
-    # hash password
-    return password
+    password_bytes = password.encode('utf-8')
+    hash_object = hashlib.sha256(password_bytes)
+    hashed_password = hash_object.hexdigest()
+    return hashed_password
 
 def check_password(password, hashed_password):
-    # check if password matches hashed password
-    return password == hashed_password
+    if hash_password(password) == hashed_password:
+        return True
+    else:
+        return False
 
 def check_username_exists(username):
-    # check if username exists in user file
     if not os.path.exists(USER_FILE):
         return False
     
