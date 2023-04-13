@@ -6,10 +6,34 @@ import re
 from bs4 import BeautifulSoup
 import time
 import auth
+import appdirs
+import datetime
+
+# Variables
+APP_NAME = 'speakDeezer'
+HISTORY_FILE = os.path.join(appdirs.user_data_dir(APP_NAME),'history.txt')
+USER_FILE = os.path.join(appdirs.user_data_dir(APP_NAME), 'users.txt')
+API_BASE_URL = "https://api.deezer.com/"
+USERNAME = ""
+
+def log_history(input_str):
+    # get current timestamp
+    if not os.path.exists(HISTORY_FILE):
+        # create history file if it doesn't exist
+        with open(HISTORY_FILE, 'w') as hf:
+            hf.write('')
+    
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # log user input to history file
+    with open(HISTORY_FILE, 'a') as hf:
+        hf.write(f'{timestamp}: {USERNAME} - {input_str}\n')
 
 def search_song(query):
+    log_history(query)
     url = f"https://api.deezer.com/search?q={query}"
     response = requests.get(url)
+    log_history(response)
     return response.json()
 
 def select_song(search_results):
@@ -106,7 +130,6 @@ def show_lyrics():
         else:
             print("Lyrics not found.")
 
-API_BASE_URL = "https://api.deezer.com/"
 
 def search_songs_by_artist(artist):
     response = requests.get(f"{API_BASE_URL}/search?q={artist}&limit=20&type=artist")
@@ -200,6 +223,7 @@ def play_songs_by_artist():
 
 def play_songs_by_genre():
     genre_name = input("Enter the name of the genre: ")
+    log_history(f"{genre_name}")
     songs = search_songs_by_genre(genre_name)
     if not songs:
         print(f"No songs found in the {genre_name} genre.")
@@ -207,13 +231,16 @@ def play_songs_by_genre():
     print(f"Found {len(songs)} songs in the {genre_name} genre:")
     for i, song in enumerate(songs):
         print(f"{i + 1}. {song['title']} by {song['artist']['name']}")
+        log_history(f"{i + 1}. {song['title']} by {song['artist']['name']}")
     try:
         song_choice = int(input("Enter the number of the song you want to play: "))
         if song_choice < 1 or song_choice > len(songs):
             print("Invalid song choice.")
+            log_history("Invalid song choice.")
             return
     except ValueError:
         print("Invalid input. Please enter a number.")
+        log_history("Invalid input. Please enter a number.")
         return
     song = songs[song_choice - 1]
     play_song(song)
@@ -235,33 +262,53 @@ def main(user):
         print(f"Welcome {user}, what would you like to do?\n")
         print("1. Search for a song and play it")
         print("2. Show song lyrics")
-        print("3. Show song recommendations")
+        print("3. Show youre recommendations")
         print("4. Play songs by artist")
         print("5. Play songs by genre")
+        
         print("6. Exit program")
+        print("\n7. Logout")
         try:
             user_choice = int(input("Enter the number of your choice: "))
             if user_choice == 1:
+                log_history(f"{user_choice}")
                 search_and_play()
                 input("Press Enter to continue...")
                 os.system('cls' if os.name == 'nt' else 'clear')
             elif user_choice == 2:
+                log_history(f"{user_choice}")
                 show_lyrics()
                 input("Press Enter to continue...")
                 os.system('cls' if os.name == 'nt' else 'clear')
             elif user_choice == 3:
+                log_history(f"{user_choice}")
                 show_recommendations()
                 input("Press Enter to continue...")
                 os.system('cls' if os.name == 'nt' else 'clear')
             elif user_choice == 4:
+                log_history(f"{user_choice}")
                 play_songs_by_artist()
                 input("Press Enter to continue...")
                 os.system('cls' if os.name == 'nt' else 'clear')
             elif user_choice == 5:
+                log_history(f"{user_choice}")
                 print("This featute is not available at this time.")
             elif user_choice == 6:
                 exit_program()
                 break
+            elif user_choice == 7:
+                log_history(f"{user_choice}")
+                auth.logout()
+            elif user_choice == 69:
+                history_folder = os.path.dirname(HISTORY_FILE)
+                os.startfile(history_folder)
+                break
+            elif user_choice == 68:
+                try:
+                    print(os.path.join(appdirs.user_data_dir(APP_NAME), 'users.txt'))
+                    input("Press Enter to continue...")
+                except Exception as e:
+                    print(e)
             else:
                 print("Invalid choice. Please try again.")
         except ValueError:
@@ -315,7 +362,7 @@ def check_api_availability(base_url=API_BASE_URL):
         print("Deezer API is not available.")
         return False
     
-USERNAME = ""
+
 
 def login():
 
