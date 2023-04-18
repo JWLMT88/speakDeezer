@@ -16,6 +16,7 @@ import sys
 import argparse
 import subprocess
 from pathlib import Path
+import crypto
 
 # Variables
 APP_NAME = 'speakDeezer'
@@ -414,6 +415,7 @@ def login():
                 USERNAME = current_user
                 return current_user
 if __name__ == '__main__':
+    os.system("title speakDeezer")
     parser = argparse.ArgumentParser(description='speakDeezer')
     parser.add_argument('query', nargs='?', help='search query or track id')
     parser.add_argument('--gui', action='store_true', help='start with GUI')
@@ -426,3 +428,4 @@ if __name__ == '__main__':
         os.system('cls' if os.name == 'nt' else 'clear')
         boot_up_animation()
         main(login())
+
