@@ -42,7 +42,7 @@ def check_subscription(username):
             json.dump(sub_data, f)
     elif sub_data["status"] == "trial" and datetime.datetime.now().strftime("%Y-%m-%d") > sub_data["end_date"]:
         # If the trial period has ended and the user has not entered a subscription key, set the status to "invalid"
-        sub_data["status"] = "invalid"
+        sub_data["status"] = "invalid" 
         with open(sub_file, "w") as f:
             json.dump(sub_data, f)
     elif sub_data["status"] == "valid":
