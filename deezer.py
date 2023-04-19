@@ -4,7 +4,6 @@ from unidecode import unidecode
 import os
 import re
 from bs4 import BeautifulSoup
-import time
 import auth
 import appdirs
 import datetime
@@ -14,9 +13,12 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 import sys
 import argparse
-import subprocess
+import sub
 from pathlib import Path
 import crypto
+import datetime
+import time
+
 
 # Variables
 APP_NAME = 'speakDeezer'
@@ -280,9 +282,9 @@ def main(user):
         print("3. Show youre recommendations")
         print("4. Play songs by artist")
         print("5. Play songs by genre")
-        
         print("6. Exit program")
-        print(f"\nLogout({user})")
+        print(f"\nLogout({user} - {sub.check_subscription(user)})")
+        sub.write_subscriptions()
         try:
             user_choice = int(input("Enter the number of your choice: "))
             if user_choice == 1:
@@ -384,6 +386,8 @@ def check_api_availability(base_url=API_BASE_URL):
 def login():
 
         while True:
+            
+            
              # check if user is logged in
             current_user = auth.get_current_user()
             if not current_user:

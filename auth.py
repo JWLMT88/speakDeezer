@@ -2,6 +2,8 @@ import hashlib
 import os
 import appdirs
 from pathlib import Path
+import subprocess
+import datetime
 
 appdata_dir = Path.home() / 'AppData' / 'Local' / 'speakDeezer'
 
@@ -96,5 +98,40 @@ def check_username_exists(username):
                 return True
     
     return False
+
+def check_subscription_status():
+    try:
+        result = subprocess.run(['python', 'subtype.py'], capture_output=True, text=True)
+        subscription_status = result.stdout.strip()
+    except:
+        print('Error checking subscription status')
+        return False
+    
+    if subscription_status == 'active':
+        expiration_date = datetime.date.today() + datetime.timedelta(days=365)
+        sub_dict = {'status': 'active', 'expiration_date': str(expiration_date)}
+    else:
+        sub_file = Path('sub.xml')
+        if sub_file.is_file():
+            with open(sub_file, 'r') as f:
+                sub_dict = eval(f.read())
+                if sub_dict['status'] == 'trial':
+                    trial_start_date = datetime.datetime.strptime(sub_dict['start_date'], '%Y-%m-%d').date()
+                    today_date = datetime.date.today()
+                    trial_days = (today_date - trial_start_date).days
+                    if trial_days >= 14:
+                        sub_dict['status'] = 'expired'
+                    else:
+                        sub_dict['days_remaining'] = 14 - trial_days
+                else:
+                    sub_dict['status'] = 'expired'
+        else:
+            expiration_date = datetime.date.today() + datetime.timedelta(days=14)
+            sub_dict = {'status': 'trial', 'start_date': str(datetime.date.today()), 'expiration_date': str(expiration_date), 'days_remaining': 14}
+    
+    with open('sub.xml', 'w') as f:
+        f.write(str(sub_dict))
+    
+    return sub_dict
 
 
