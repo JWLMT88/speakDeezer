@@ -1,6 +1,9 @@
 # Speak Deezer
 A command-line music player script that lets you search for and play songs and get the lyrics from Deezer's music library.
 
+[![Python application](https://github.com/JWLMT88/speakDeezer/actions/workflows/python-app.yml/badge.svg)](https://github.com/JWLMT88/speakDeezer/actions/workflows/python-app.yml)
+
+
 ## Getting Started
 These instructions will help you get a copy of the project up and running on your local machine.
 
