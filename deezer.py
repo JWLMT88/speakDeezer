@@ -18,7 +18,9 @@ from pathlib import Path
 import crypto
 import datetime
 import time
-
+import updater
+import ctypes
+from tqdm import tqdm
 
 # Variables
 APP_NAME = 'speakDeezer'
@@ -268,11 +270,25 @@ def exit_program():
     pygame.quit()
     quit()
     
-
+substates = {
+    "Pro",
+    "Invalid",
+    "Trail"
+}
 
 def main(user):
+    valid = sub.check_subscription(user)
     
-        
+    os.system(f"title speakDeezer({valid})")
+    substate = ""
+    if(valid == "valid"):
+        substate = "Pro"
+    elif(valid.startswith == "trial"):
+        substate = valid
+    elif(valid == "invalid"):
+        substate = "Invalid"
+        python = sys.executable
+        os.execl(python, python, *sys.argv)
     pygame.init()
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -283,7 +299,7 @@ def main(user):
         print("4. Play songs by artist")
         print("5. Play songs by genre")
         print("6. Exit program")
-        print(f"\nLogout({user} - {sub.check_subscription(user)})")
+        print(f"\nLogout({user} - {substate})")
         sub.write_subscriptions()
         try:
             user_choice = int(input("Enter the number of your choice: "))
@@ -315,9 +331,9 @@ def main(user):
                 break
             elif user_choice == 7:
                 log_history(f"{user_choice}")
+                auth.logout()
                 python = sys.executable
                 os.execl(python, python, *sys.argv)
-                auth.logout()
             elif user_choice == 69:
                 history_folder = os.path.dirname(HISTORY_FILE)
                 os.startfile(history_folder)
@@ -386,9 +402,6 @@ def check_api_availability(base_url=API_BASE_URL):
 def login():
 
         while True:
-            
-            
-             # check if user is logged in
             current_user = auth.get_current_user()
             if not current_user:
                 # prompt user to log in or register
@@ -418,8 +431,16 @@ def login():
             else:
                 USERNAME = current_user
                 return current_user
-if __name__ == '__main__':
-    os.system("title speakDeezer")
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        return False
+
+def run_as_admin():
+    ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1)
+    
+if __name__ == '__main__':  
     parser = argparse.ArgumentParser(description='speakDeezer')
     parser.add_argument('query', nargs='?', help='search query or track id')
     parser.add_argument('--gui', action='store_true', help='start with GUI')
@@ -429,6 +450,11 @@ if __name__ == '__main__':
         window = gui.App()
         app.exec_()
     else:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print("Started Updater...")
+        updater.check_update_and_download('JWLMT88', 'speakDeezer', 'deezer.py')
+        updater.check_update_and_download('JWLMT88', 'speakDeezer', 'gui.py')
+        input("Press enter to continue")
         os.system('cls' if os.name == 'nt' else 'clear')
         boot_up_animation()
         main(login())

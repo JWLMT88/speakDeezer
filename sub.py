@@ -58,8 +58,16 @@ def check_subscription(username):
             with open(sub_file, "w") as f:
                 json.dump(sub_data, f)
         elif sub_data["key"] not in SUBSCRIPTION_KEYS:
-            # If the subscription key is not valid, set the status to "invalid"
-            sub_data["status"] = "invalid"
+            
+            key = input("Please enter a subscription key because your provided key is not valid: ")
+            if key in SUBSCRIPTION_KEYS:
+                end_date = SUBSCRIPTION_KEYS[key]
+                sub_data["key"] = key
+                sub_data["start_date"] = datetime.datetime.now().strftime("%Y-%m-%d")
+                sub_data["end_date"] = end_date
+                sub_data["status"] = "valid"
+            else:
+                sub_data["status"] = "invalid"
             with open(sub_file, "w") as f:
                 json.dump(sub_data, f)
     
